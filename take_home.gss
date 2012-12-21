@@ -1,5 +1,5 @@
 library maxlik, pgraph;
-
+rndseed 1;
 data = loadd("th1.dat");
 
 Y = data[., 1];
@@ -34,4 +34,10 @@ proc loglik(beta, data);
 	Y = data[., 1];
 	X = data[., 2:cols(data)];
 	retp(Y.*(X*beta) - ln(Y!) - exp(X*beta));
-endp;
+endp;
+
+// d)
+// compute the variance-covariance matrix using the sandwich estimator.
+_max_covpar = 3;
+beta_initial = zeros(7,1);
+{beta_hat, likelihood, g, vhat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
