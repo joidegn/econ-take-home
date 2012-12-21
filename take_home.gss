@@ -1,0 +1,30 @@
+library pgraph;
+
+data = loadd("th1.dat");
+
+Y = data[., 1];
+X = ones(rows(data), 1) ~ data[., 2:cols(data)];
+
+// a) descriptive statistics:
+meanY = meanc(Y);
+meanX = meanc(X);  // {1, mean_ui, mean_rr, mean_rrui, mean_dr, mean_drui, mean_lwage}
+wage = exp(X[., 7]);
+n = rows(X);
+n_ui = sumc(X[., 2]); // people receiving unemployment benefit
+
+print "\n\ndescriptive statistics:\n";
+print n_ui  "of" n " people received unemployment benefits i.e. " n_ui/n*100 "%";
+print "average replacement rate:" meanX[3,1];
+// TODO: remove 0s and calculate average replacement rate of those receiving unemployment
+print "average disregard rate:" meanX[5,1];
+// TODO: remove 0s and calculate average disregard rate of those receiving unemployment
+print "average weekly wage:" meanc(exp(X[., 7]));
+print "range of weekly wage:" minc(exp(X[., 7])) " - " maxc(exp(X[., 7]));
+print "wage quantiles (0.25, 0.5, 0.75):" quantile(exp(X[., 7]), 0.25) quantile(exp(X[., 7]), 0.5) quantile(exp(X[., 7]), 0.75);
+// TODO: add interquartile range
+
+num_break_points = 90;
+break_points = seqa(minc(wage), (maxc(wage) - (minc(wage)))/num_break_points, num_break_points);
+
+{b, m , freq} = hist(exp(X[., 7]), break_points);
+
