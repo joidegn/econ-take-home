@@ -26,25 +26,25 @@ print "wage quantiles (0.25, 0.5, 0.75):" quantile(exp(X[., 7]), 0.25) quantile(
 num_break_points = 90;
 break_points = seqa(minc(wage), (maxc(wage) - (minc(wage)))/num_break_points, num_break_points);
 
-//{b, m , freq} = hist(exp(X[., 7]), break_points);
-
-// c)
-proc loglik(beta, data);
-	local Y, X;
-	Y = data[., 1];
-	X = data[., 2:cols(data)];
-	retp(Y.*(X*beta) - ln(Y!) - exp(X*beta));
-endp;
-
-// d)
-// compute the variance-covariance matrix using the sandwich estimator.
-_max_covpar = 3;
-
+//{b, m , freq} = hist(exp(X[., 7]), break_points);
+ 
+ // c)
+proc loglik(beta, data);
+	local Y, X;
+	Y = data[., 1];
+	X = data[., 2:cols(data)];
+	retp(X*beta - exp(X*beta).*Y);
+endp;
+
+// d)
+// compute the variance-covariance matrix using the sandwich estimator.
+_max_covpar = 3;
+
 beta_initial = zeros(7,1);
-{beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
-
-// some reports
-print "standard errors:" sqrt(diag(var_hat));
-// report t-statistic and p-value i.e. significance of beta_hat
-print "t-statistic:" (beta_hat)./sqrt(diag(var_hat));
-print "p-value:"
+{beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
+
+// some reports
+print "standard errors:" sqrt(diag(var_hat));
+// report t-statistic and p-value i.e. significance of beta_hat
+print "t-statistic:" (beta_hat)./sqrt(diag(var_hat));
+print "p-value:" // maybe normal distribution from point of t-statistic to -infinity/+infinity or something
