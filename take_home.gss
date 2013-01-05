@@ -23,7 +23,8 @@ print "average weekly wage:" meanc(exp(X[., 7]));
 print "range of weekly wage:" minc(exp(X[., 7])) " - " maxc(exp(X[., 7]));
 print "wage quantiles (0.25, 0.5, 0.75):" quantile(exp(X[., 7]), 0.25) quantile(exp(X[., 7]), 0.5) quantile(exp(X[., 7]), 0.75);
 // TODO: add interquartile range and check what else to put here
-
+
+//TODO: this histogram is not needed and if I use it, I should probably remove the breakpoint calculation
 num_break_points = 90;
 break_points = seqa(minc(wage), (maxc(wage) - (minc(wage)))/num_break_points, num_break_points);
 
@@ -76,4 +77,6 @@ proc PE_hat(X, beta_hat);
 	retp(-X[., 7] .* exp(-X*beta_hat));
 endp;
 
-{b, m, freq} = hist(PE_hat(X, beta_hat), 20);
+{b, m, freq} = hist(PE_hat(X, beta_hat), 10);
+print "summary statistics are :" b m freq;
+// TODO: there should be more
