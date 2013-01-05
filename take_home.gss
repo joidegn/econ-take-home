@@ -74,9 +74,9 @@ else;
 endif;
 
 proc PE_hat(X, beta_hat);
-	retp(-X[., 7] .* exp(-X*beta_hat));
+	retp(-beta_hat[7] * exp(-X*beta_hat));
 endp;
 
-{b, m, freq} = hist(PE_hat(X, beta_hat), 10);
+{b, m, freq} = hist(PE_hat(X, beta_hat), 75);
 print "summary statistics are :" b m freq;
 // TODO: there should be more
