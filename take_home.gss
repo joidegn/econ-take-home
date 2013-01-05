@@ -66,7 +66,7 @@ print "critical value from chisq-distribution with 1 df:" critical_value;
 if (wald_stat > critical_value);
 	print "H0 was rejected at the 95% significance level. The expected unemployment duration is not 6 periods at a 95% significance level.";
 else;
-	print "H0 was not rejected at the 5% significance level";
+	print "H0 was not rejected at the 95% significance level";
 endif;
 
 proc PE_hat(X, beta_hat);
