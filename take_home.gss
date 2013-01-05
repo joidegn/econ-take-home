@@ -40,8 +40,11 @@ endp;
 // d)
 // compute the variance-covariance matrix using the sandwich estimator.
 _max_covpar = 3;
+// set parameter names
+_max_ParNames = {"UNDUR", "UI", "RR", "RRUI", "DR", "DRUI", "LWAGE"};
 
-beta_initial = zeros(7,1);
+beta_initial = zeros(7,1);
+
 {beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
 
 // some reports
