@@ -14,6 +14,7 @@ n_ui = sumc(X[., 2]); // people receiving unemployment benefit
 
 print "\n\ndescriptive statistics:\n";
 print n_ui  "of" n " people received unemployment benefits i.e. " n_ui/n*100 "%";
+print "average unemployment duration: " meanY; 
 print "average replacement rate:" meanX[3,1];
 // TODO: remove 0s and calculate average replacement rate of those receiving unemployment
 print "average disregard rate:" meanX[5,1];
@@ -27,7 +28,7 @@ num_break_points = 90;
 break_points = seqa(minc(wage), (maxc(wage) - (minc(wage)))/num_break_points, num_break_points);
 
 //{b, m , freq} = hist(exp(X[., 7]), break_points);
- 
+ 
  // c)
 proc loglik(beta, data);
 	local Y, X;
@@ -47,4 +48,23 @@ beta_initial = zeros(7,1);
 print "standard errors:" sqrt(diag(var_hat));
 // report t-statistic and p-value i.e. significance of beta_hat
 print "t-statistic:" (beta_hat)./sqrt(diag(var_hat));
-print "p-value:" // maybe normal distribution from point of t-statistic to -infinity/+infinity or something
+print "p-value:"; // maybe normal distribution from point of t-statistic to -infinity/+infinity or something
+
+
+// e)
+proc wald_statistic(Xi, beta_hat, var_hat, z);
+	local h;
+	h = exp(-Xi'*beta_hat) - z;
+	retp(h'*inv(Xi'*exp(-Xi'*beta_hat)*var_hat*exp(-beta_hat'*Xi)*Xi)*h);
+endp;
+
+x_test = {1, 1, 0.5, 0.5, 0.1, 0.1, 5.5};
+critical_value = cdfChii(0.95, 1);
+wald_stat = wald_statistic(x_test, beta_hat, var_hat, 6);
+print "wald statistic for supposed xi:" wald_stat;
+print "critical value from chisq-distribution with 1 df:" critical_value;
+if (wald_stat > critical_value);
+	print "H0 was rejected at the 5% significance level. The expected unemployment duration is not 6 periods.";
+else;
+	print "H0 was not rejected at the 5% significance level";
+endif;
