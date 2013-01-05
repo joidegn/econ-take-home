@@ -68,3 +68,7 @@ if (wald_stat > critical_value);
 else;
 	print "H0 was not rejected at the 5% significance level";
 endif;
+
+proc PE_hat(X, beta_hat);
+	retp(-X[., 7]' * exp(-X*beta_hat));
+endp;
