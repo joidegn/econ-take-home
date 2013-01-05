@@ -64,11 +64,13 @@ wald_stat = wald_statistic(x_test, beta_hat, var_hat, 6);
 print "wald statistic for supposed xi:" wald_stat;
 print "critical value from chisq-distribution with 1 df:" critical_value;
 if (wald_stat > critical_value);
-	print "H0 was rejected at the 5% significance level. The expected unemployment duration is not 6 periods at a 5% significance level.";
+	print "H0 was rejected at the 5% significance level. The expected unemployment duration is not 6 periods at the 5% significance level.";
 else;
 	print "H0 was not rejected at the 5% significance level";
 endif;
 
 proc PE_hat(X, beta_hat);
-	retp(-X[., 7]' * exp(-X*beta_hat));
+	retp(-X[., 7] .* exp(-X*beta_hat));
 endp;
+
+{b, m, freq} = hist(PE_hat(X, beta_hat), 20);
