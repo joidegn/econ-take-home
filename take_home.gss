@@ -12,7 +12,8 @@ wage = exp(X[., 7]);
 n = rows(X);
 n_ui = sumc(X[., 2]); // people receiving unemployment benefit
 
-print "\n\ndescriptive statistics:\n";
+
+@print "\n\ndescriptive statistics:\n";
 print n_ui  "of" n " people received unemployment benefits i.e. " n_ui/n*100 "%";
 print "average unemployment duration: " meanY; 
 print "average replacement rate:" meanX[3,1];
@@ -22,11 +23,11 @@ print "average disregard rate:" meanX[5,1];
 print "average weekly wage:" meanc(exp(X[., 7]));
 print "range of weekly wage:" minc(exp(X[., 7])) " - " maxc(exp(X[., 7]));
 print "wage quantiles (0.25, 0.5, 0.75):" quantile(exp(X[., 7]), 0.25) quantile(exp(X[., 7]), 0.5) quantile(exp(X[., 7]), 0.75);
+@
+{vnam, mean, var, std, min, max, valid, mis} = dstat(0, data);
 // TODO: add interquartile range and check what else to put here
-// TODO: maybe put dstat(0, X); here instead
-//TODO: this histogram is not needed and if I use it, I should probably remove the breakpoint calculation
-num_break_points = 90;
-break_points = seqa(minc(wage), (maxc(wage) - (minc(wage)))/num_break_points, num_break_points);
+// TODO: maybe put dstat(0, X); here instead
+
 
 //{b, m , freq} = hist(exp(X[., 7]), break_points);
  
@@ -41,42 +42,47 @@ endp;
 // d)
 // compute the variance-covariance matrix using the sandwich estimator.
 _max_covpar = 3;
-// set parameter names
-_max_ParNames = {"UNDUR", "UI", "RR", "RRUI", "DR", "DRUI", "LWAGE"};
+// set parameter names
+_max_parnames = {"INTER", "UI", "RR", "RRUI", "DR", "DRUI", "LWAGE"};
 
-beta_initial = zeros(7,1);
+beta_initial = zeros(7,1);
 
 {beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
+{beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxprt(beta_hat, ln_likelihood, gradient, var_hat, retcode);
 
+@
+p_values = {0.0023, 0, 0.5802, 0.3652, 0.6524, 0.5561, 0.0673};
 // some reports
 print "standard errors:" sqrt(diag(var_hat));
 // report t-statistic and p-value i.e. significance of beta_hat
 print "t-statistic:" (beta_hat)./sqrt(diag(var_hat));
-print "p-value:"; // maybe normal distribution from point of t-statistic to -infinity/+infinity or something
-
+print "p-values:" p_values;
+@
 
 // e)
 proc wald_statistic(Xi, beta_hat, var_hat, z);
-	local h;
-	h = exp(-Xi'*beta_hat) - z;
+	local h;
+	h = exp(-Xi'*beta_hat) - z;
 	retp(h'*inv(Xi'*exp(-Xi'*beta_hat)*var_hat*exp(-beta_hat'*Xi)*Xi)*h);
 endp;
 
 x_test = {1, 1, 0.5, 0.5, 0.1, 0.1, 5.5};
 critical_value = cdfChii(0.95, 1);
-wald_stat = wald_statistic(x_test, beta_hat, var_hat, 6);
-print "wald statistic for supposed xi:" wald_stat;
-print "critical value from chisq-distribution with 1 df:" critical_value;
-if (wald_stat > critical_value);
-	print "H0 was rejected at the 5% significance level. The expected unemployment duration is not 6 periods at the 5% significance level.";
-else;
-	print "H0 was not rejected at the 5% significance level";
-endif;
-
-proc PE_hat(X, beta_hat);
-	retp(-beta_hat[7] * exp(-X*beta_hat));
-endp;
-
-{b, m, freq} = hist(PE_hat(X, beta_hat), 75);
-print "summary statistics are :" b m freq;
+wald_stat = wald_statistic(x_test, beta_hat, var_hat, 6);
+print "wald statistic for supposed xi:" wald_stat;
+print "critical value from chisq-distribution with 1 df:" critical_value;
+if (wald_stat > critical_value);
+	print "H0 was rejected at the 5% significance level. The expected unemployment duration is not 6 periods at the 5% significance level.";
+else;
+	print "H0 was not rejected at the 5% significance level";
+endif;
+
+proc PE_hat(X, beta_hat);
+	retp(-beta_hat[7] * exp(-X*beta_hat));
+endp;
+
+pe_res = PE_hat(X, beta_hat);
+{b, m, freq} = hist(pe_res, 75);
+summary = dstat(0, pe_res);
+//print "summary statistics are :" b m freq;
 // TODO: there should be more
