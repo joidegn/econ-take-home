@@ -6,14 +6,13 @@ Y = data[., 1];
 X = ones(rows(data), 1) ~ data[., 2:cols(data)];
 
 // b) descriptive statistics:
+@
 meanY = meanc(Y);
 meanX = meanc(X);  // {1, mean_ui, mean_rr, mean_rrui, mean_dr, mean_drui, mean_lwage}
 wage = exp(X[., 7]);
 n = rows(X);
 n_ui = sumc(X[., 2]); // people receiving unemployment benefit
-
-
-@print "\n\ndescriptive statistics:\n";
+print "\n\ndescriptive statistics:\n";
 print n_ui  "of" n " people received unemployment benefits i.e. " n_ui/n*100 "%";
 print "average unemployment duration: " meanY; 
 print "average replacement rate:" meanX[3,1];
@@ -42,15 +41,15 @@ endp;
 // d)
 // compute the variance-covariance matrix using the sandwich estimator.
 _max_covpar = 3;
-// set parameter names
+// set parameter names
 parnames = getname("th1.dat");
-parnames[1] = "INTER";
-// parnames = {"INTER", "UI", "RR", "RRUI", "DR", "DRUI", "LWAGE"}
+parnames[1] = "INTER";
+// parnames = {"INTER", "UI", "RR", "RRUI", "DR", "DRUI", "LWAGE"}
 _max_parnames = parnames;
 
 beta_initial = zeros(7,1);
 
-{beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
+{beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
 // cls here to make the output more readable
 {beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxprt(beta_hat, ln_likelihood, gradient, var_hat, retcode);
 
@@ -80,7 +79,7 @@ if (wald_stat > critical_value);
 else;
 	print "H0 was not rejected at the 5% significance level";
 endif;
-
+
 // g)
 proc PE_hat(X, beta_hat);
 	retp(-beta_hat[7] * exp(-X*beta_hat));
