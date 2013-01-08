@@ -76,13 +76,12 @@ if (wald_stat > critical_value);
 else;
 	print "H0 was not rejected at the 5% significance level";
 endif;
-
+
+// g)
 proc PE_hat(X, beta_hat);
 	retp(-beta_hat[7] * exp(-X*beta_hat));
 endp;
 
 pe_res = PE_hat(X, beta_hat);
 {b, m, freq} = hist(pe_res, 75);
-summary = dstat(0, pe_res);
-//print "summary statistics are :" b m freq;
-// TODO: there should be more
+{vnam, mean, var, std, min, max, valid, mis}  = dstat(0, pe_res);
