@@ -63,21 +63,13 @@ _max_parnames = parnames;
 
 beta_initial = zeros(7,1);
 
-// prevent maxlik output. To debug, comment the following line:
+// prevent maxlik output. To debug, comment the following line out:
 screen off ;
 {beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
 screen on;
-
+
+// report and print prettily
 {beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxprt(beta_hat, ln_likelihood, gradient, var_hat, retcode);
-
-@
-p_values = {0.0023, 0, 0.5802, 0.3652, 0.6524, 0.5561, 0.0673};
-// some reports
-print "standard errors:" sqrt(diag(var_hat));
-// report t-statistic and p-value i.e. significance of beta_hat
-print "t-statistic:" (beta_hat)./sqrt(diag(var_hat));
-print "p-values:" p_values;
-@
 
 // e)
 proc wald_statistic(Xi, beta_hat, var_hat, z);

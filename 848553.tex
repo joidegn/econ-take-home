@@ -79,7 +79,10 @@ $$ h(\hat{\beta}_U)'[X_i'\exp(-2X_i'\hat{\beta}_U)\hat{V}(\hat{\beta}_U)X_i]^{-1
 For the rest of this subproblem, see GAUSS code.
 
 \subsection{}
-$$PE(X_i) = \frac{\partial E(Y_i/X_i)}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial X_i^7} = -\beta_7\exp(-X_i'\beta) = \frac{-\beta_7}{\lambda_i}$$ Where $X_i^7$ denotes the seventh value of the vector $X_i$.
+$$PE(X_i) = \frac{\partial E(Y_i|X_i)}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial X_i^7} = -\beta_7\exp(-X_i'\beta) = \frac{-\beta_7}{\lambda_i}$$ Where $X_i^7$ denotes the seventh value of the vector $X_i$.
+\\
+
+TODO: The partial effect of $E(Y_i|X_i)$ with respect to LWAGE is the expected change of $E(Y_i|X_i)$ if LWAGE changes by 1 unit.
 
 \subsection{}
 see GAUSS code.
