@@ -3,7 +3,6 @@
 
 \usepackage{ntheorem}
 \usepackage{amssymb}
-\usepackage[german]{babel}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
@@ -70,10 +69,17 @@ Similarly the intercept makes sure there is a positive unemployment duration pre
 
 
 \subsection{}
-$$h = exp(-X\hat{\beta}) - z$$
-From the lecture notes: WALD $$=h'$$
-$h'*inv(Xi'*exp(-Xi'*beta_hat)*var_hat*exp(-beta_hat'*Xi)*Xi)*h$
+$$h(\beta) = exp(-X_i'\beta) - z$$
+From the lecture notes: $W=h(\hat{\theta}_U)'[\frac{\partial h(\hat{\theta}_U)}{\partial \theta'}\hat{V}(\hat{\theta}_U)\frac{\partial h(\hat{\theta}_U)'}{\partial \theta}]^{-1}h(\hat{\theta}_U)$ \\
+with $\theta=\beta$ and $\frac{\partial h(\hat{\beta}_U)}{\partial \beta'} = -X_i'\exp(-X_i'\hat{\beta}_U)$ we have: \\
+$$W=h(\hat{\beta}_U)'[X_i'\exp(-X_i'\hat{\beta}_U)\hat{V}(\hat{\beta}_U)\exp(-\hat{\beta}_U'X_i)]^{-1}h(\hat{\beta}_U) = $$ 
+$$ h(\hat{\beta}_U)'[X_i'\exp(-2X_i'\hat{\beta}_U)\hat{V}(\hat{\beta}_U)X_i]^{-1}h(\hat{\beta}_U)$$ Since here $h(\beta)_{1x1} \Rightarrow$ $W=h(\hat{\beta}_U)^2[X_i'\exp(-2X_i'\hat{\beta}_U)\hat{V}(\hat{\beta}_U)X_i]^{-1}$
 
-\textbf{1f)}
+For the rest of this subproblem, see GAUSS code.
+
+\subsection{}
 $$PE(X_i) = \frac{\partial E(Y_i/X_i)}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial X_i^7} = -\beta_7\exp(-X_i'\beta) = \frac{-\beta_7}{\lambda_i}$$ Where $X_i^7$ denotes the seventh value of the vector $X_i$.
+
+\subsection{}
+see GAUSS code.
 \end{document}

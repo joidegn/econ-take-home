@@ -83,7 +83,7 @@ print "p-values:" p_values;
 proc wald_statistic(Xi, beta_hat, var_hat, z);
 	local h;
 	h = exp(-Xi'*beta_hat) - z;
-	retp(h'*inv(Xi'*exp(-Xi'*beta_hat)*var_hat*exp(-beta_hat'*Xi)*Xi)*h);
+	retp(h^2*inv(Xi'*exp(-2*Xi'*beta_hat)*var_hat*Xi));
 endp;
 
 x_test = {1, 1, 0.5, 0.5, 0.1, 0.1, 5.5};
