@@ -31,13 +31,14 @@ print "wage quantiles (0.25, 0.5, 0.75):" quantile(exp(X[., 7]), 0.25) quantile(
 //{b, m , freq} = hist(exp(X[., 7]), break_points);
  
  // c)
+@	// for testing purposes
 proc lik(data, beta);
 	local Y, X;
 	Y = data[., 1];
 	X = data[., 2:cols(data)];
 	retp(exp(X*beta)*exp(-exp(X*beta).*Y));
 endp;
-
+@
 proc loglik(beta, data);
 	local Y, X;
 	Y = data[., 1];
