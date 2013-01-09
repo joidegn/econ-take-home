@@ -26,10 +26,11 @@
 
 \section{Problem}
 \subsection{}
-$$\ln L(\beta, X, Y) = \sum_iX_i'\beta-e^{X_i'\beta}Y_i-\ln(Y_i!)$$
+$$\ln L(\beta, X, Y) = \sum_iX_i'\beta-e^{X_i'\beta}Y_i$$
 $$S(\beta) = \frac{\partial\ln L}{\partial \beta'} = \sum_iX_i' - X_ie^{X_i'\beta}Y_i$$
 $$H(\beta) = \frac{\partial^2}{\partial \beta' \partial \beta} = -\sum_iX_iX_i'\exp^{X_i'\beta}Y_i$$
-$$I(\beta) = -E(H(\beta)) = nE(X_iX_i'e^{X_i'\beta})$$
+$I(\beta) = -E(H(\beta)) = \sum_i E(X_iX_i'e^{X_i'\beta}Y_i) = \sum_i E(E(X_iX_i'e^{X'\beta} E(Y|X)) = \sum_i E(X_iX_i'\frac{e^{X'\beta}}{\lambda})) = \sum_i E(X_iX_i')$ \\
+\\
 \textbf{1f)}
 $$PE(X_i) = \frac{\partial E(Y_i/X_i)}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial X_i^7} = -\beta_7\exp(-X_i'\beta) = \frac{-\beta_7}{\lambda_i}$$ Where $X_i^7$ denotes the seventh value of the vector $X_i$.
 \end{document}
