@@ -49,16 +49,30 @@ Parameters & Estimates & Std. err. & Est./s.e. & Prob. & Gradient \\
 \end{tabular}
 \\ 
 \\ 
-The above table corresponds to the table printed by GAUSS after using the `maxprt` command with the output from maxlik with the given dataset and a vector containing zeros as initial parameter vector. The p-values ('Prob.' column) indicate that only the intercept, UI and maybe LWAGE are significant at sensible significance levels (e.g. 1\%, 5\% or 10\%).
+The above table corresponds to the table printed by GAUSS after using the `maxprt` command with the output from maxlik with the given dataset and a vector containing zeros as initial parameter vector. The p-values ('Prob.' column) indicate that only the intercept, UI and maybe LWAGE are significant at sensible significance levels (e.g. 1\%, 5\% or 10\%). This could partly be explained by the interaction terms which capture some of the information of RR and DR. 
+
+TODO: drop the following lines??: Dropping the interaction terms results in an increase of the p-value of RR and in an increase of the p-value of DR. However, RRUI seems to explain a substantial amount of RR and similarly DRUI has the opposite sign of DR which hints at a different behaviour among the persons receiving unemployment and those who do not.  \\
+Parameters    Estimates     Std. err.  Est./s.e.  Prob.    Gradient \\
+------------------------------------------------------------------ \\
+INTER           -2.5134        0.7867   -3.195   0.0014      0.0000 \\
+UI              -0.8257        0.0590  -13.996   0.0000      0.0000 \\
+RR               0.5598        0.4825    1.160   0.2459      0.0000 \\
+DR               0.1109        0.5144    0.216   0.8293      0.0000 \\
+LWAGE            0.1942        0.1051    1.848   0.0647      0.0000 \\
+\\
+\\
 
 Since $E(Y_i/X_i) = \frac{1}{\lambda_i} = e^{-X'\beta}$, the beta parameters have an inverse effect on UNDUR. As a result, UI (reception of unemployment benefits) increases the duration of unemployment in our model. Unsurprisingly, so do RR (replacement rate) and DR (disregard rate).
 
-The interaction terms capture the different effect that RR (replacement rate) and DR (disregard rate) have for people who received unemployment benefits and for people who did not receive unemployment benefits. While DR decreases UNDUR, DRUI seems to increase UNDUR. A higher disregard rate makes it more attractive to take on employment ceteris paribus, so it would seem natural to expect DRUI (disregard rate of people who received unemployment benefits) to have a negative effect on UNDUR.
+The interaction terms capture the different effects that RR (replacement rate) and DR (disregard rate) have for people who received unemployment benefits and for people who did not receive unemployment benefits. While DR decreases UNDUR, DRUI seems to increase UNDUR. A higher disregard rate makes it more attractive to take on employment ceteris paribus, so it would seem natural to expect DRUI (disregard rate of people who received unemployment benefits) to have a negative effect on UNDUR. However, we do not observe this.
 
-Similarly the intercept makes sure there is a positive unemployment duration predicted if all other variables were to be 0 (we have no datapoint for which this is true). Notably LWAGE has a negative impact on UNDUR. This could be intuitively explained as receiving higher wages might make it more attractive for people to find an open position or maybe from a demand perspective there could be more open positions which pay higher wages. LWAGE is defined as the logithm of the weekly wages before unemployment. Thus we would expect an increase of the weekly wage by 1\% to decrease the unemployment duration by 0.19\%.
+Similarly the intercept makes sure there is a positive unemployment duration predicted if all other variables were to be 0 (we have no datapoint for which this is true). Notably LWAGE has a negative impact on UNDUR. This can be intuitively explained as receiving higher wages might make it more attractive for people to find an open position or also but from a demand perspective there could be more open positions which pay higher wages. LWAGE is defined as the logithm of the weekly wages before unemployment. Thus we would expect an increase of the weekly wage by 1\% to decrease the unemployment duration by $e^{0.19\%} \approx 1$.
 
 
 \subsection{}
+$$h = exp(-X\hat{\beta}) - z$$
+From the lecture notes: WALD $$=h'$$
+$h'*inv(Xi'*exp(-Xi'*beta_hat)*var_hat*exp(-beta_hat'*Xi)*Xi)*h$
 
 \textbf{1f)}
 $$PE(X_i) = \frac{\partial E(Y_i/X_i)}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial X_i^7} = -\beta_7\exp(-X_i'\beta) = \frac{-\beta_7}{\lambda_i}$$ Where $X_i^7$ denotes the seventh value of the vector $X_i$.
