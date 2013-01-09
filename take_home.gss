@@ -24,11 +24,9 @@ print "range of weekly wage:" minc(exp(X[., 7])) " - " maxc(exp(X[., 7]));
 print "wage quantiles (0.25, 0.5, 0.75):" quantile(exp(X[., 7]), 0.25) quantile(exp(X[., 7]), 0.5) quantile(exp(X[., 7]), 0.75);
 @
 {vnam, mean, var, std, min, max, valid, mis} = dstat(0, data);
-// TODO: add interquartile range and check what else to put here
-// TODO: maybe put dstat(0, X); here instead
+// TODO: add interquartile range and check what else to put here
+// TODO: add a boxplot if I am bored
 
-
-//{b, m , freq} = hist(exp(X[., 7]), break_points);
  
  // c)
 @	// for testing purposes
@@ -56,9 +54,12 @@ parnames[1] = "INTER";
 _max_parnames = parnames;
 
 beta_initial = zeros(7,1);
+
+// prevent maxlik output. To debug, comment the following line:
+screen off ;
+{beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
+screen on;
 
-{beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
-// cls here to make the output more readable
 {beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxprt(beta_hat, ln_likelihood, gradient, var_hat, retcode);
 
 @
