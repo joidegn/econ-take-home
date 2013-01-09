@@ -21,8 +21,8 @@
 \theoremstyle{break}
 
 \begin{document}
-
 \maketitle
+
 
 \section{Problem}
 \subsection{}
@@ -31,6 +31,28 @@ $$S(\beta) = \frac{\partial\ln L}{\partial \beta'} = \sum_iX_i' - X_ie^{X_i'\bet
 $$H(\beta) = \frac{\partial^2}{\partial \beta' \partial \beta} = -\sum_iX_iX_i'\exp^{X_i'\beta}Y_i$$
 $I(\beta) = -E(H(\beta)) = \sum_i E(X_iX_i'e^{X_i'\beta}Y_i) = \sum_i E(E(X_iX_i'e^{X'\beta} E(Y|X)) = \sum_i E(X_iX_i'\frac{e^{X'\beta}}{\lambda})) = \sum_i E(X_iX_i')$ \\
 \\
+\subsection{}
+see gauss code
+\subsection{}
+see gauss code
+\subsection{}
+\begin{tabular}{ l | c c c c c }
+Parameters & Estimates & Std. err. & Est./s.e. & Prob. & Gradient \\
+\hline
+	INTER & -2.4123 & 0.7916 & -3.047 & 0.0023 & 0.0000 \\
+	UI & -0.9945 & 0.2393 & -4.156 & 0.0000 & 0.0000 \\
+	RR & 0.3305 & 0.5974 & 0.553 & 0.5802 & 0.0000 \\
+	RRUI & 0.5152 & 0.5690 & 0.906 & 0.3652 & 0.0000 \\
+	DR & 0.3645 & 0.8093 & 0.450 & 0.6524 & 0.0000 \\
+	DRUI & -0.5876 & 0.9982 & -0.589 & 0.5561 & 0.0000 \\
+	LWAGE & 0.1900 & 0.1038 & 1.830 & 0.0673 & 0.0000 \\
+\end{tabular}
+\\ 
+\\ 
+The above table corresponds to the table printed by GAUSS after using the `maxprt` command with the output from maxlik with the given dataset and a vector containing zeros as initial parameter vector. The p-values ('Prob.' column) indicate that only the intercept, UI and maybe LWAGE are significant at sensible significance levels (e.g. 1\%, 5\% or 10\%). Since $E(Y_i/X_i) = \frac{1}{\lambda_i} = e^{-X'\beta}$, the beta parameters have an inverse effect on UNDUR. As a result, UI (reception of unemployment benefits) increases the duration of unemployment in our model. Similarly the intercept makes sure there is a positive unemployment duration predicted if all other variables were to be 0 (we have no datapoint for which this is true). Notably LWAGE has a negative impact on UNDUR. This could be intuitively explained as receiving higher wages might make it more attractive for people to find an open position or maybe from a demand perspective there could be more open positions which pay higher wages. LWAGE is defined as the logithm of the weekly wages before unemployment. Thus we would expect an increase of the weekly wage by 1\% to decrease the unemployment duration by 0.19\%
+
+\subsection{}
+
 \textbf{1f)}
 $$PE(X_i) = \frac{\partial E(Y_i/X_i)}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial X_i^7} = -\beta_7\exp(-X_i'\beta) = \frac{-\beta_7}{\lambda_i}$$ Where $X_i^7$ denotes the seventh value of the vector $X_i$.
 \end{document}
