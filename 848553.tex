@@ -61,9 +61,10 @@ LWAGE            0.1942        0.1051    1.848   0.0647      0.0000 \\
 \\
 \\
 
-Since $E(Y_i/X_i) = \frac{1}{\lambda_i} = e^{-X'\beta}$, the beta parameters have an inverse effect on UNDUR. As a result, UI (reception of unemployment benefits) increases the duration of unemployment in our model. Unsurprisingly, so do RR (replacement rate) and DR (disregard rate).
+Since $E(Y_i/X_i) = \frac{1}{\lambda_i} = e^{-X'\beta}$, in this model higher beta parameters result in lower UNDUR while lower (and negative) values of the beta parameter result in higher estimations of UNDUR.
+Thus UI (reception of unemployment benefits) has a relatively strong effect on the duration of unemployment in our model while RR (replacement rate) and DR (disregard rate) have a lower impact on UNDUR per unit change.
 
-The interaction terms capture the different effects that RR (replacement rate) and DR (disregard rate) have for people who received unemployment benefits and for people who did not receive unemployment benefits. While DR decreases UNDUR, DRUI seems to increase UNDUR. A higher disregard rate makes it more attractive to take on employment ceteris paribus, so it would seem natural to expect DRUI (disregard rate of people who received unemployment benefits) to have a negative effect on UNDUR. However, we do not observe this.
+The interaction terms capture the different effects that RR and DR have for people who received unemployment benefits. While DR decreases UNDUR, DRUI seems to increase UNDUR. A higher disregard rate makes it more attractive to take on employment ceteris paribus, so it would seem natural to expect DRUI (disregard rate of people who received unemployment benefits) to have a negative effect on UNDUR. However, we do not observe this.
 
 Similarly the intercept makes sure there is a positive unemployment duration predicted if all other variables were to be 0 (we have no datapoint for which this is true). Notably LWAGE has a negative impact on UNDUR. This can be intuitively explained as receiving higher wages might make it more attractive for people to find an open position or also but from a demand perspective there could be more open positions which pay higher wages. LWAGE is defined as the logithm of the weekly wages before unemployment. Thus we would expect an increase of the weekly wage by 1\% to decrease the unemployment duration by $e^{0.19\%} \approx 1$.
 
