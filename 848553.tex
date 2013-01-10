@@ -28,7 +28,7 @@
 $$\ln L(\beta, X, Y) = \sum_iX_i'\beta-e^{X_i'\beta}Y_i$$
 $$S(\beta) = \frac{\partial\ln L}{\partial \beta'} = \sum_iX_i' - X_ie^{X_i'\beta}Y_i$$
 $$H(\beta) = \frac{\partial^2}{\partial \beta' \partial \beta} = -\sum_iX_iX_i'\exp^{X_i'\beta}Y_i$$
-$I(\beta) = -E(H(\beta)) = \sum_i E(X_iX_i'e^{X_i'\beta}Y_i) = \sum_i E(E(X_iX_i'e^{X'\beta} E(Y|X)) = \sum_i E(X_iX_i'\frac{e^{X'\beta}}{\lambda})) = \sum_i E(X_iX_i')$ \\
+$I(\beta) = -E(H(\beta)) = \sum_i E(X_iX_i'e^{X_i'\beta}Y_i) = \sum_i E(E(X_iX_i'e^{X'\beta} E(Y_i|X_i)) = \sum_i E(X_iX_i'\frac{e^{X_i'\beta}}{\lambda_i})) = \sum_i E(X_iX_i')$ \\
 \\
 \subsection{}
 see gauss code
@@ -48,33 +48,23 @@ Parameters & Estimates & Std. err. & Est./s.e. & Prob. & Gradient \\
 \end{tabular}
 \\ 
 \\ 
-The above table corresponds to the table printed by GAUSS after using the `maxprt` command with the output from maxlik with the given dataset and a vector containing zeros as initial parameter vector. The p-values ('Prob.' column) indicate that only the intercept, UI and maybe LWAGE are significant at sensible significance levels (e.g. 1\%, 5\% or 10\%). This could partly be explained by the interaction terms which capture some of the information of RR and DR. 
+The above table corresponds to the table printed by GAUSS after using the `maxprt` command with the output from maxlik with the given dataset and a vector containing zeros as initial parameter vector. The p-values ('Prob.' column) indicate that only the intercept, UI and maybe LWAGE are significant at sensible significance levels (e.g. 1\%, 5\% or 10\%). This could partly be explained by the interaction terms which capture some of the information of RR and DR.
 
-TODO: drop the following lines??: Dropping the interaction terms results in an increase of the p-value of RR and in an increase of the p-value of DR. However, RRUI seems to explain a substantial amount of RR and similarly DRUI has the opposite sign of DR which hints at a different behaviour among the persons receiving unemployment and those who do not.  \\
-Parameters    Estimates     Std. err.  Est./s.e.  Prob.    Gradient \\
------------------------------------------------------------------- \\
-INTER           -2.5134        0.7867   -3.195   0.0014      0.0000 \\
-UI              -0.8257        0.0590  -13.996   0.0000      0.0000 \\
-RR               0.5598        0.4825    1.160   0.2459      0.0000 \\
-DR               0.1109        0.5144    0.216   0.8293      0.0000 \\
-LWAGE            0.1942        0.1051    1.848   0.0647      0.0000 \\
-\\
-\\
+Since $E(Y_i/X_i) = \frac{1}{\lambda_i} = e^{-X'\beta}$, in this model positive beta parameters result in lower UNDUR while negative values of the beta parameters result in higher estimations of UNDUR.
+Thus UI (reception of unemployment benefits) has a relatively strong positive effect on the duration of unemployment in our model albeit the negative sign of its parameter might suggest otherwise while RR (replacement rate) and DR (disregard rate) have a negative impact on UNDUR per unit of change.
 
-Since $E(Y_i/X_i) = \frac{1}{\lambda_i} = e^{-X'\beta}$, in this model higher beta parameters result in lower UNDUR while lower (and negative) values of the beta parameter result in higher estimations of UNDUR.
-Thus UI (reception of unemployment benefits) has a relatively strong effect on the duration of unemployment in our model while RR (replacement rate) and DR (disregard rate) have a lower impact on UNDUR per unit change.
+The interaction terms capture the different effects that RR and DR have for people who received unemployment benefits. Interestingly the effect of DR on UNDUR is negative and the effect of DRUI is positive (although both parameters are not significantly different from 0) which hints at the disregard rate increasing unemployment durations for people which received UI. This could be interpreted as a sign that unemployment insurance negatively affects the effectiveness of the disregard rate in combating long unemployment durations.
 
-The interaction terms capture the different effects that RR and DR have for people who received unemployment benefits. Interestingly the effect of DR on UNDUR is smaller than the effect of DRUI (although both parameters are not significantly different from 0) which hints at a stronger effect of the replacement rate on unemployment durations for people which received UI.
-
-Notably and intuitively LWAGE has a relatively high p-value (significant at 10\% level). This can be explained as e.g. receiving higher wages might make it more attractive for people to find an open position or also (from a demand perspective) there could be more open positions with higher wages in the respective time frame. LWAGE is defined as the logithm of the weekly wages before unemployment. Thus we would expect an increase of the log weekly wage by 1\% to decrease the unemployment duration by $e^{0.19*\ln(1.01)} \approx 1$.
+Notably and intuitively LWAGE has a relatively high p-value (significant at 10\% level). This can be explained as receiving higher wages might make it more attractive for people to find an open position or also (from a demand perspective) there could be more open positions with higher wages in the respective time frame. LWAGE is defined as the logarithm of the weekly wages before unemployment. Thus we would expect an increase of the weekly wage by 1\% to decrease the unemployment duration by $e^{0.19*\ln(1.01)} \approx 1$.
 
 
 \subsection{}
-$$h(\beta) = exp(-X_i'\beta) - z$$
+$h(\beta) = exp(-X_i'\beta) - z$ \\
 From the lecture notes: $W=h(\hat{\theta}_U)'[\frac{\partial h(\hat{\theta}_U)}{\partial \theta'}\hat{V}(\hat{\theta}_U)\frac{\partial h(\hat{\theta}_U)'}{\partial \theta}]^{-1}h(\hat{\theta}_U)$ \\
 with $\theta=\beta$ and $\frac{\partial h(\hat{\beta}_U)}{\partial \beta'} = -X_i'\exp(-X_i'\hat{\beta}_U)$ we have: \\
 $$W=h(\hat{\beta}_U)'[X_i'\exp(-X_i'\hat{\beta}_U)\hat{V}(\hat{\beta}_U)\exp(-\hat{\beta}_U'X_i)]^{-1}h(\hat{\beta}_U) = $$ 
-$$ h(\hat{\beta}_U)'[X_i'\exp(-2X_i'\hat{\beta}_U)\hat{V}(\hat{\beta}_U)X_i]^{-1}h(\hat{\beta}_U)$$ Since here $h(\beta)_{1x1} \Rightarrow$ $W=h(\hat{\beta}_U)^2[X_i'\exp(-2X_i'\hat{\beta}_U)\hat{V}(\hat{\beta}_U)X_i]^{-1}$
+$$ h(\hat{\beta}_U)'[X_i'\exp(-2X_i'\hat{\beta}_U)\hat{V}(\hat{\beta}_U)X_i]^{-1}h(\hat{\beta}_U)$$
+ Since here $h(\beta)_{1x1} \Rightarrow$ $W=h(\hat{\beta}_U)^2[X_i'\exp(-2X_i'\hat{\beta}_U)\hat{V}(\hat{\beta}_U)X_i]^{-1}$ \\
 
 For the rest of this subproblem, see GAUSS code.
 
@@ -82,7 +72,7 @@ For the rest of this subproblem, see GAUSS code.
 $$PE(X_i) = \frac{\partial E(Y_i|X_i)}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial LWAGE_i} = \frac{\partial{\frac{1}{\lambda_i}}}{\partial X_i^7} = -\beta_7\exp(-X_i'\beta) = \frac{-\beta_7}{\lambda_i}$$ Where $X_i^7$ denotes the seventh value of the vector $X_i$.
 \\
 
-TODO: The partial effect of $E(Y_i|X_i)$ with respect to LWAGE is the expected change of $E(Y_i|X_i)$ if LWAGE changes by 1 unit.
+The partial effect of $E(Y_i|X_i)$ with respect to LWAGE is the expected change of $E(Y_i|X_i)$ if LWAGE changes by 1 unit. The partial effect is negative ($\beta_7$ is positive) so if LWAGE increases, UNDUR will decrease in our model.
 
 \subsection{}
 see GAUSS code.

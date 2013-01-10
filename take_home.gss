@@ -6,42 +6,26 @@ Y = data[., 1];
 X = ones(rows(data), 1) ~ data[., 2:cols(data)];
 
 // b) descriptive statistics:
-@
-meanY = meanc(Y);
-meanX = meanc(X);  // {1, mean_ui, mean_rr, mean_rrui, mean_dr, mean_drui, mean_lwage}
-wage = exp(X[., 7]);
-n = rows(X);
-n_ui = sumc(X[., 2]); // people receiving unemployment benefit
-print "\n\ndescriptive statistics:\n";
-print n_ui  "of" n " people received unemployment benefits i.e. " n_ui/n*100 "%";
-print "average unemployment duration: " meanY; 
-print "average replacement rate:" meanX[3,1];
-// TODO: remove 0s and calculate average replacement rate of those receiving unemployment
-print "average disregard rate:" meanX[5,1];
-// TODO: remove 0s and calculate average disregard rate of those receiving unemployment
-print "average weekly wage:" meanc(exp(X[., 7]));
-print "range of weekly wage:" minc(exp(X[., 7])) " - " maxc(exp(X[., 7]));
-print "wage quantiles (0.25, 0.5, 0.75):" quantile(exp(X[., 7]), 0.25) quantile(exp(X[., 7]), 0.5) quantile(exp(X[., 7]), 0.75);
-@
-{vnam, mean, var, std, min, max, valid, mis} = dstat(0, data);
-// TODO: add interquartile range and check what else to put here
-// TODO: add a boxplot if I am bored
+wage = exp(X[., 7]);
+n = rows(X);
+n_ui = sumc(X[., 2]); // people receiving unemployment benefit
 
-// TODO: remove this:
-// temporarily remove interaction terms
-//X_cols = {1, 2, 3, 5, 7};
-//X = X[., X_cols];
-
+{vnam, mean, var, std, min, max, valid, mis} = dstat("th1.dat", 0);
+
+//  to remove interaction terms for testing uncomment the following lines and change X[., 7] and parnames wherever necessary:
+//X_cols_no_intercept = {1, 2, 3, 5, 7};
+//X = X[., X_cols_no_intercept];
+
 
  // c)
-@	// for testing purposes
-proc lik(data, beta);
+@	// for testing purposes:
+proc lik(data, beta);
 	local Y, X;
 	Y = data[., 1];
-	X = data[., 2:cols(data)];
-	retp(exp(X*beta)*exp(-exp(X*beta).*Y));
-endp;
-@
+	X = data[., 2:cols(data)];
+	retp(exp(X*beta)*exp(-exp(X*beta).*Y));
+endp;
+@
 proc loglik(beta, data);
 	local Y, X;
 	Y = data[., 1];
@@ -54,20 +38,21 @@ endp;
 _max_covpar = 3;
 // set parameter names
 parnames = getname("th1.dat");
-parnames[1] = "INTER";
-// TODO: remove this
-//parnames =  parnames[X_cols];
+// the first variable is the intercept and not UNDUR:
+parnames[1] = "INTER";
+// remove this if 
+//parnames =  parnames[X_cols_no_intercept];
 
 // parnames = {"INTER", "UI", "RR", "RRUI", "DR", "DRUI", "LWAGE"}
 _max_parnames = parnames;
 
 beta_initial = zeros(7,1);
-
+
 // prevent maxlik output. To debug, comment the following line out:
-screen off ;
-{beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
+screen off ;
+{beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxlik(Y~X, 0, &loglik, beta_initial);
 screen on;
-
+
 // report and print prettily
 {beta_hat, ln_likelihood, gradient, var_hat, retcode} = maxprt(beta_hat, ln_likelihood, gradient, var_hat, retcode);
 
@@ -78,7 +63,7 @@ proc wald_statistic(Xi, beta_hat, var_hat, z);
 	retp(h^2*inv(Xi'*exp(-2*Xi'*beta_hat)*var_hat*Xi));
 endp;
 
-x_test = {1, 1, 0.5, 0.5, 0.1, 0.1, 5.5};
+x_test = {1, 1, 0.5, 0.5, 0.1, 0.1, 5.5};
 
 critical_value = cdfChii(0.95, 1);
 wald_stat = wald_statistic(x_test, beta_hat, var_hat, 6);
@@ -91,10 +76,13 @@ else;
 endif;
 
 // g)
+// function for calculating the PE of LWAGE
 proc PE_hat(X, beta_hat);
 	retp(-beta_hat[7] * exp(-X*beta_hat));
 endp;
 
 pe_res = PE_hat(X, beta_hat);
-{b, m, freq} = hist(pe_res, 75);
+{b, m, freq} = hist(pe_res, sqrt(rows(data)));
+
+// X1 refers to the partial effect
 {vnam, mean, var, std, min, max, valid, mis}  = dstat(0, pe_res);
