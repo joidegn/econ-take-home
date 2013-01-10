@@ -1,3 +1,4 @@
+cls;
 library maxlik, pgraph;
 rndseed 1;
 data = loadd("th1.dat");
@@ -70,7 +71,7 @@ wald_stat = wald_statistic(x_test, beta_hat, var_hat, 6);
 print "wald statistic for supposed xi:" wald_stat;
 print "critical value from chisq-distribution with 1 df:" critical_value;
 if (wald_stat > critical_value);
-	print "H0 was rejected at the 5% significance level. The expected unemployment duration is not 6 periods at the 5% significance level.";
+	print "H0 was rejected at the 5% significance level. The expected unemployment duration is not 6 periods at the 5% significance level for the individual in question.";
 else;
 	print "H0 was not rejected at the 5% significance level";
 endif;
